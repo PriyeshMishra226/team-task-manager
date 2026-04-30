@@ -39,11 +39,22 @@ app.use('/api/tasks', taskRoutes);
 
 // ── Serve Frontend in Production ──
 if (process.env.NODE_ENV === 'production') {
+  const fs = require('fs');
   const frontendDistPath = path.join(__dirname, '../../frontend/dist');
-  app.use(express.static(frontendDistPath));
-  app.get('*', (req, res) => {
-    res.sendFile(path.join(frontendDistPath, 'index.html'));
-  });
+  console.log(`[SERVER] Resolved frontend path: ${frontendDistPath}`);
+  
+  if (fs.existsSync(frontendDistPath)) {
+    console.log('[SERVER] Frontend build found! Serving static files.');
+    app.use(express.static(frontendDistPath));
+    app.get('*', (req, res) => {
+      res.sendFile(path.join(frontendDistPath, 'index.html'));
+    });
+  } else {
+    console.error('[SERVER] ERROR: Frontend build directory not found! Check your build command.');
+    app.get('*', (req, res) => {
+      res.status(500).send('Frontend build not found. The application failed to build correctly.');
+    });
+  }
 } else {
   // ── 404 Handler (API only in dev) ──
   app.use((req, res) => {
