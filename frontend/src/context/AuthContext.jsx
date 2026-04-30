@@ -12,12 +12,23 @@ export const AuthProvider = ({ children }) => {
     const checkAuth = async () => {
       const token = localStorage.getItem('token');
       if (token) {
-        try {
-          const response = await getMe();
-          setUser(response.data.data.user);
-        } catch (error) {
-          console.error('Auth check failed:', error);
-          localStorage.removeItem('token');
+        if (token === 'demo-token-12345') {
+          const demoUserStr = localStorage.getItem('user');
+          if (demoUserStr) {
+            setUser(JSON.parse(demoUserStr));
+          } else {
+            localStorage.removeItem('token');
+          }
+        } else {
+          try {
+            const response = await getMe();
+            setUser(response.data.data.user);
+          } catch (error) {
+            console.error('Auth check failed:', error);
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            localStorage.removeItem('isAuthenticated');
+          }
         }
       }
       setLoading(false);
@@ -33,6 +44,8 @@ export const AuthProvider = ({ children }) => {
 
   const logout = () => {
     localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    localStorage.removeItem('isAuthenticated');
     setUser(null);
     toast.success('Logged out successfully');
   };
