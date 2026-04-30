@@ -1,0 +1,29 @@
+{
+  "name": "team-task-manager-backend",
+  "version": "1.0.0",
+  "description": "Backend API for Team Task Manager",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js",
+    "migrate": "npx sequelize-cli db:migrate",
+    "migrate:undo": "npx sequelize-cli db:migrate:undo:all",
+    "seed": "npx sequelize-cli db:seed:all",
+    "post-deploy": "npm run migrate && npm run seed"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.0",
+    "express-validator": "^7.2.0",
+    "jsonwebtoken": "^9.0.2",
+    "morgan": "^1.10.0",
+    "pg": "^8.13.0",
+    "pg-hstore": "^2.3.4",
+    "sequelize": "^6.37.3"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.4"
+  }
+}
